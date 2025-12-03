@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://midnightshelf.github.io/i/sitemap.xml
