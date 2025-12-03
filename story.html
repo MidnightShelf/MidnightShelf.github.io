@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Loading… - Midnight Library</title>
+  <style>
+    body {
+      margin:0;
+      font-family:'Segoe UI',sans-serif;
+      background:#fff;
+      color:#333;
+      line-height:1.7;
+      padding:2rem;
+      max-width:800px;
+      margin:2rem auto;
+      transition: background 0.3s, color 0.3s;
+    }
+    .back {
+      color:#0056cc;
+      margin-top:2.5rem;
+      display:inline-block;
+      text-decoration:none;
+      font-weight:bold;
+      transition: color 0.2s;
+    }
+    .back:hover {
+      color:#003d99;
+      text-decoration: underline;
+    }
+    img {
+      width:100%;
+      height:auto;
+      max-height: 500px;
+      object-fit: cover;
+      border-radius:12px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom:1.5rem;
+      transition: filter 0.3s, transform 0.3s;
+    }
+    img:hover {
+      filter: brightness(1.05);
+      transform: scale(1.02);
+    }
+    h1 {
+      margin-bottom:0.5rem;
+      font-size:2rem;
+    }
+    pre {
+      white-space:pre-wrap;
+      font-family:Georgia,serif;
+      font-size:1.15rem;
+      background:rgba(0,0,0,0.02);
+      padding:1.5rem;
+      border-radius:10px;
+      overflow-x:auto;
+    }
+    body.dark {
+      background:#000;
+      color:#fff;
+    }
+    body.blue {
+      background:#0a1a33;
+      color:#f0f0f0;
+    }
+    body.dark img, body.blue img {
+      box-shadow:0 4px 16px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body>
+  <div style="text-align:center">
+    <img id="thumb" src="" alt="">
+    <h1 id="title">Loading writing…</h1>
+    <div style="color:#777; margin-bottom:1.5rem;">By <span id="author">…</span></div>
+  </div>
+  <pre id="content">Fetching your writing…</pre>
+  <a href="index.html" class="back">← Back to all</a>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.className = savedTheme;
+
+    const BASE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrUI2m4HTUJQCXVZ-edTrw_cLxBy3hY7l222ywE4Em0op9xiLGcJIe9aXf4JQiBbEI9tzN5lY6Hax0/pub?output=csv";
+    const CSV_URL = BASE_CSV + "&t=" + Date.now();
+    const isApproved = (val) => val && val.trim().toLowerCase() === 'yes';
+
+    const id = new URLSearchParams(location.search).get('id');
+    if (!id) {
+      document.body.innerHTML = "<h1>No writing ID provided</h1><a href='index.html' class='back'>← Back</a>";
+      throw new Error("No ID");
+    }
+
+    fetch(CSV_URL)
+      .then(res => res.ok ? res.text() : Promise.reject("CSV fetch failed"))
+      .then(csv => {
+        const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+        const data = parsed.data.filter(row => row.title && row.timestamp);
+        const writing = data.find(r => r.timestamp === id && isApproved(r.Approved));
+
+        if (!writing) {
+          document.body.innerHTML = `
+            <h1>Writing not found or not approved yet</h1>
+            <p>Your writing may still be under review (up to 72 hours).</p>
+            <a href="index.html" class="back">← Back to all writing</a>
+          `;
+          return;
+        }
+
+        document.getElementById('title').textContent = writing.title || 'Untitled';
+        document.getElementById('author').textContent = writing.author || 'Anonymous';
+        document.getElementById('content').textContent = writing.storycontent || 'No content available.';
+        document.getElementById('thumb').src = (writing.thumbnailurl || '').trim() ||
+          'https://via.placeholder.com/800x400?text=Midnight+Library';
+        document.title = (writing.title || 'Writing') + " - Midnight Library";
+      })
+      .catch(err => {
+        console.error("Error loading writing:", err);
+        document.body.innerHTML = `
+          <h1>Error loading writing</h1>
+          <p>Please try again later.</p>
+          <a href="index.html" class="back">← Back</a>
+        `;
+      });
+  </script>
+</body>
+</html>
