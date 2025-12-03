@@ -1,14 +1,294 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Midnight Library</title>
-  <meta name="description" content="A community for sharing short stories.">
-  <!-- Help Google understand this is a real site -->
-  <link rel="canonical" href="https://midnightshelf.github.io/i/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="E9D3Ei0ZAVVz9lDGO0riwrUWMa7AIUbLtjshOMd6N0M" />
+  <title>Midnight Library — Share & Read Original Writing</title>
+  <meta name="description" content="A safe, judgment-free space to publish and discover original writing. Submit your piece today!">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Midnight Library">
+  <meta property="og:description" content="Share your writing. Read others. No judgment — just creativity.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://f.playcode.io/p-2477698/v-1/1f99cce0-f133-4ade-b499-86d688c402b8/image.png">
+  <meta property="og:url" content="https://midnightshelf.github.io/i/">
+  <style>
+    :root {
+      --bg:#fff;
+      --text:#000;
+      --card:#fff;
+      --overlay:rgba(0,0,0,0.5);
+      --tbg:#fff;
+      --tt:#000;
+      --shadow:0 4px 12px rgba(0,0,0,0.1);
+      --shadow-hover:0 8px 20px rgba(0,0,0,0.15);
+    }
+    body {
+      margin:0;
+      font-family:'Segoe UI',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      transition: background 0.4s ease, color 0.4s ease;
+      line-height:1.6;
+    }
+    .hero {
+      position:relative;
+      background:url('https://f.playcode.io/p-2477698/v-1/1f99cce0-f133-4ade-b499-86d688c402b8/image.png') center/cover;
+      height:60vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+    }
+    .overlay {
+      background:var(--overlay);
+      padding:2rem;
+      text-align:center;
+      color:#fff;
+      border-radius:12px;
+      backdrop-filter: blur(4px);
+      max-width:80%;
+    }
+    #search {
+      margin-top:1rem;
+      padding:.75rem 1rem;
+      border:none;
+      width:80%;
+      max-width:400px;
+      border-radius:8px;
+      font-size:1rem;
+      box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    }
+    .theme-toggle {
+      position:absolute;
+      top:1rem;
+      right:1rem;
+      display:flex;
+      gap:6px;
+    }
+    .theme-toggle button {
+      padding:.4rem .7rem;
+      border:none;
+      border-radius:6px;
+      background:#eee;
+      cursor:pointer;
+      font-weight:bold;
+      font-size:0.85rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .theme-toggle button:hover {
+      background:#ddd;
+      transform: translateY(-2px);
+    }
+    .story-grid {
+      padding: 2rem;
+      column-width: 300px;
+      column-gap: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .story-card {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: inherit;
+      display: inline-block;
+      vertical-align: top;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto 1.5rem;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+    .story-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .story-card img {
+      width: 100%;
+      height: auto;
+      max-height: 360px;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.3s;
+    }
+    .story-card:hover img {
+      filter: brightness(1.05);
+    }
+    .story-title {
+      padding:1.2rem 1rem;
+      text-align:center;
+      background:var(--tbg);
+      color:var(--tt);
+      font-weight:600;
+      font-size:1.1rem;
+      transition: background 0.3s;
+    }
+
+    body.dark {
+      --bg:#000;
+      --text:#fff;
+      --card:#111;
+      --overlay:rgba(255,255,255,.1);
+      --tbg:#111;
+      --tt:#fff;
+      --shadow:0 4px 12px rgba(0,0,0,0.3);
+      --shadow-hover:0 8px 24px rgba(0,0,0,0.4);
+    }
+    body.blue {
+      --bg:#0a1a33;
+      --text:#f0f0f0;
+      --card:#1a2f4d;
+      --overlay:rgba(0,0,0,.6);
+      --tbg:#1a2f4d;
+      --tt:#f0f0f0;
+      --shadow:0 4px 12px rgba(0,0,0,0.3);
+      --shadow-hover:0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .site-footer {
+      padding:2rem;
+      text-align:center;
+      font-size:.9rem;
+      color:var(--text);
+      border-top:1px solid rgba(0,0,0,.1);
+    }
+    .submit-button {
+      display:inline-block;
+      background:#0056cc;
+      color:#fff;
+      padding:.75rem 1.5rem;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:bold;
+      margin:2rem auto;
+      font-size:1.05rem;
+      box-shadow: var(--shadow);
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+    .submit-button:hover {
+      background:#0042a1;
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+    @media(max-width:768px){
+      .hero{height:50vh}
+      #search{width:90%}
+    }
+  </style>
 </head>
 <body>
-  <p>Redirecting to <a href="/i/">Midnight Library</a>...</p>
-  <script>setTimeout(() => window.location.href = "/i/", 500);</script>
+  <header class="hero">
+    <div class="overlay">
+      <h2>The Midnight Library</h2>
+      <h1>Discover Original Writing</h1>
+      <input type="text" id="search" placeholder="Search writing by title..." />
+    </div>
+    <div class="theme-toggle">
+      <button data-theme="light">Light</button>
+      <button data-theme="dark">Dark</button>
+      <button data-theme="blue">Blue</button>
+    </div>
+  </header>
+
+  <main class="story-grid" id="storyGrid">
+    <p style="text-align:center;padding:3rem;opacity:0.7;">Loading writing…</p>
+  </main>
+
+  <a href="https://tally.so/r/ODQV97" target="_blank" class="submit-button">Submit Your Writing</a>
+
+  <footer class="site-footer">
+    <p>© 2025 Midnight Library — writing not owned by Midnight Library.<br>
+    Midnight is merely a place to post and discover writing.<br>
+    Writing posted is subject to removal.</p>
+    <p>Please see <a href="TOS.html">our Community Guidelines</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+    <p style="font-size:50%">Site still under construction</p>
+  </footer>
+
+  <!-- PapaParse for CSV parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    // Theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.className = savedTheme;
+    document.querySelectorAll('.theme-toggle button').forEach(b => {
+      b.onclick = () => {
+        document.body.className = b.dataset.theme;
+        localStorage.setItem('theme', b.dataset.theme);
+      };
+    });
+
+    // Search
+    const search = document.getElementById('search');
+    let cards = [];
+    search.oninput = () => {
+      const term = search.value.toLowerCase().trim();
+      cards.forEach(card => {
+        const title = card.querySelector('.story-title').textContent.toLowerCase();
+        card.style.display = title.includes(term) ? '' : 'none';
+      });
+    };
+
+    // ✅ Cache-busting CSV URL
+    const BASE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrUI2m4HTUJQCXVZ-edTrw_cLxBy3hY7l222ywE4Em0op9xiLGcJIe9aXf4JQiBbEI9tzN5lY6Hax0/pub?output=csv";
+    const CSV_URL = BASE_CSV + "&t=" + Date.now();
+
+    const isApproved = (val) => val && val.trim().toLowerCase() === 'yes';
+
+    fetch(CSV_URL)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch writing');
+        return res.text();
+      })
+      .then(csv => {
+        const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+        let data = parsed.data;
+        data = data.filter(row => row.title && row.title.trim());
+        const approved = data.filter(row => isApproved(row.Approved));
+        const grid = document.getElementById('storyGrid');
+
+        if (approved.length === 0) {
+          grid.innerHTML = '<p style="text-align:center;padding:3rem;opacity:0.7;">No approved writing yet — submit the first!</p>';
+          cards = [];
+          return;
+        }
+
+        grid.innerHTML = '';
+        cards = [];
+        approved.forEach((row, i) => {
+          const card = document.createElement('a');
+          card.className = 'story-card';
+          card.href = `story.html?id=${encodeURIComponent(row.timestamp)}`;
+          card.style.animationDelay = `${i * 40}ms`;
+
+          const thumb = (row.thumbnailurl || '').trim() ||
+            'https://f.playcode.io/p-2477698/v-1/2ebe7a5b-eec2-4f44-a124-42e9878b4c0a/screenshot-2025-07-27-125704.png';
+
+          card.innerHTML = `
+            <img src="${thumb}"
+                 onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'"
+                 alt="${row.title || 'Writing'}">
+            <div class="story-title">${row.title || 'Untitled'}</div>
+          `;
+          grid.appendChild(card);
+          cards.push(card);
+        });
+      })
+      .catch(err => {
+        console.error("Error loading writing:", err);
+        document.getElementById('storyGrid').innerHTML = 
+          '<p style="text-align:center;padding:3rem;color:#c00;">Failed to load writing. Please check back later.</p>';
+      });
+  </script>
 </body>
 </html>
