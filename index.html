@@ -4,11 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="E9D3Ei0ZAVVz9lDGO0riwrUWMa7AIUbLtjshOMd6N0M" />
-  <title>Midnight Library — Share & Read Original Writing</title>
+  <title>Midnight Library</title>
   <meta name="description" content="A safe, judgment-free space to publish and discover original writing. Submit your piece today!">
-  <!-- Open Graph -->
   <meta property="og:title" content="Midnight Library">
-  <meta property="og:description" content="Share your writing. Read others. No judgment — just creativity.">
+  <meta property="og:description" content="Share your writing today!.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://f.playcode.io/p-2477698/v-1/1f99cce0-f133-4ade-b499-86d688c402b8/image.png">
   <meta property="og:url" content="https://midnightshelf.github.io/i/">
@@ -216,10 +215,8 @@
     <p style="font-size:50%">Site still under construction</p>
   </footer>
 
-  <!-- PapaParse for CSV parsing -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    // Theme
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.className = savedTheme;
     document.querySelectorAll('.theme-toggle button').forEach(b => {
@@ -229,7 +226,6 @@
       };
     });
 
-    // Search
     const search = document.getElementById('search');
     let cards = [];
     search.oninput = () => {
@@ -240,7 +236,6 @@
       });
     };
 
-    // ✅ Cache-busting CSV URL
     const BASE_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrUI2m4HTUJQCXVZ-edTrw_cLxBy3hY7l222ywE4Em0op9xiLGcJIe9aXf4JQiBbEI9tzN5lY6Hax0/pub?output=csv";
     const CSV_URL = BASE_CSV + "&t=" + Date.now();
 
